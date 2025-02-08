@@ -2,6 +2,10 @@ import mongoose, { Schema } from "mongoose";
 
 const achievementSchema = new Schema(
   {
+    recepient: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
     title: {
       type: String,
       required: true,

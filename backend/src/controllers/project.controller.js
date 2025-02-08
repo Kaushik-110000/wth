@@ -1,12 +1,13 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { Project } from "../models/project.model.js";
+import { User } from "../models/user.model.js";
 import {
   uploadOnCloudinary,
   deleteFromCloudinary,
 } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-
+import mongoose  from "mongoose";
 const uploadProject = asyncHandler(async (req, res) => {
   const {
     title,
@@ -32,7 +33,7 @@ const uploadProject = asyncHandler(async (req, res) => {
       return data?.url;
     })
   );
-
+  console.log(mediaUrls);
   const project = await Project.create({
     title,
     description,
@@ -41,7 +42,7 @@ const uploadProject = asyncHandler(async (req, res) => {
     technologiesUsed: technologiesUsed || null,
     teamMembers: teamMembers || null,
     githubLink: githubLink || null,
-    mediaUrls: mediaUrls || null,
+    media: mediaUrls || null,
   });
 
   return res
@@ -128,7 +129,54 @@ const getProject = asyncHandler(async (req, res) => {
   if (!project) {
     throw new ApiError(404, "Project cannot be found");
   }
-  return res.status(200).json(new ApiResponse(200, {}, "Project found"));
+  return res.status(200).json(new ApiResponse(200, project , "Project found"));
 });
 
-export { uploadProject, deleteProject, updateProject, getProject };
+const getAll = asyncHandler(async (req, res) => {
+  const { userName } = req.params; // Extract userName from req.params
+
+  if (!userName) {
+    throw new ApiError(404, "Username not present");
+  }
+
+  // Corrected query to find user
+  const user = await User.findOne({ userName: userName.trim() });
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const userId = user._id;
+
+  // Corrected aggregate pipeline
+  const projects = await Project.aggregate([
+    {
+      $match: {
+        teamMembers: new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "teamMembers",
+        foreignField: "_id",
+        as: "teamMembers",
+        pipeline: [
+          {
+            $project: {
+              fullName: 1,
+              userName: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+  ]);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, projects, "Found all projects"));
+});
+
+export { uploadProject, deleteProject, updateProject, getProject, getAll };

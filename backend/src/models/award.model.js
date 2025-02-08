@@ -14,8 +14,12 @@ const awardSchema = new Schema(
       type: Number,
       required: true,
     },
+    recepient: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
     certificate: {
-      type: String, 
+      type: String,
     },
   },
   { timestamps: true }

@@ -1,113 +1,142 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { Achievement } from "../models/achievement.model.js";
-import {
-  uploadOnCloudinary,
-  deleteFromCloudinary,
-} from "../utils/cloudinary.js";
+import { uploadOnCloudinary, deleteFromCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { User } from "../models/user.model.js";
+import mongoose from "mongoose";
 
 const createAchievement = asyncHandler(async (req, res) => {
   const { title, description, date } = req.body;
+
   if (!title || !description || !date) {
-    throw new ApiError("All fields are necessary");
+    throw new ApiError(400, "Title, Description, and Date are required");
   }
 
-  const certificateLocalPath = req.files.certificate[0].path;
-  if (!certificateLocalPath) {
-    throw new ApiError(400, "Upload the certificate");
+  const userId = req?.user?._id;
+  if (!userId) {
+    throw new ApiError(400, "User not authenticated");
   }
 
-  const certificate = await uploadOnCloudinary(certificateLocalPath);
-
-  if (!certificate) {
-    throw new ApiError(504, "Certificate cannot be uploaded");
+  let certificateUrl = null;
+  if (req?.file?.path) {
+    const data = await uploadOnCloudinary(req.file.path);
+    certificateUrl = data?.url;
   }
+
   const achievement = await Achievement.create({
     title,
     description,
     date,
-    certificate,
+    certificate: certificateUrl,
+    recepient: userId,
   });
 
   return res
     .status(200)
-    .json(new ApiResponse(200, achievement, "Achievement recorded"));
+    .json(new ApiResponse(200, achievement, "Achievement created successfully"));
 });
 
-const deleteAchievement = asyncHandler(async (req, res) => {
-  const { achievementId } = req.params;
-  if (!achievementId) {
-    throw new ApiError(404, "achievement id is missing");
+const getPersonAchievements = asyncHandler(async (req, res) => {
+  const { userName } = req.params;
+  if (!userName) {
+    throw new ApiError(400, "User name is required");
   }
-  const achievement = await Achievement.findById(achievementId);
-  if (!achievement) {
-    throw new ApiError("Achievement cannot be found");
+
+  const user = await User.findOne({ userName: userName.trim() });
+  if (!user) {
+    throw new ApiError(404, "User not found");
   }
+
+  const userId = user._id;
+  const achievements = await Achievement.aggregate([
+    {
+      $match: {
+        recepient: new mongoose.Types.ObjectId(userId),
+      },
+    },
+  ]);
+
+  if (!achievements) {
+    throw new ApiError(404, "Achievements not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, achievements, "Achievements retrieved successfully"));
 });
 
 const updateAchievement = asyncHandler(async (req, res) => {
   const { achievementId } = req.params;
   if (!achievementId) {
-    throw new ApiError(404, "achievement id is missing");
+    throw new ApiError(400, "Achievement ID is required");
+  }
+
+  const achievement = await Achievement.findById(achievementId);
+  if (!achievement) {
+    throw new ApiError(404, "Achievement not found");
   }
 
   const { title, description, date } = req.body;
-  if (!title || !description || !date) {
-    throw new ApiError("All fields are necessary");
-  }
+  let certificateUrl = achievement.certificate;
 
-  const certificateLocalPath = req.files.certificate[0].path;
-  if (!certificateLocalPath) {
-    throw new ApiError(400, "Upload the certificate");
-  }
-
-  const certificate = await uploadOnCloudinary(certificateLocalPath);
-
-  if (!certificate) {
-    throw new ApiError(504, "Certificate cannot be uploaded");
-  }
-
-  const achievement = await Achievement.findByIdAndUpdate(
-    achievementId,
-    {
-      $set: {
-        title,
-        description,
-        certificate,
-        date,
-      },
-    },
-    {
-      new: true,
+  if (req?.file?.path) {
+    if (certificateUrl) {
+      await deleteFromCloudinary(certificateUrl);
     }
+    const data = await uploadOnCloudinary(req.file.path);
+    certificateUrl = data?.url;
+  }
+
+  const updatedAchievement = await Achievement.findByIdAndUpdate(
+    achievementId,
+    { title, description, date, certificate: certificateUrl },
+    { new: true }
   );
 
-  if (!achievement) {
-    throw new ApiError(404, "Achievement cannot be updated");
-  }
   return res
     .status(200)
-    .json(new ApiResponse(200, achievement, "Achievement updated"));
+    .json(new ApiResponse(200, updatedAchievement, "Achievement updated successfully"));
 });
 
-const getAchievement = asyncHandler(async (req, res) => {
+const getOneAchievement = asyncHandler(async (req, res) => {
   const { achievementId } = req.params;
   if (!achievementId) {
-    throw new ApiError(404, "achievement id is missing");
+    throw new ApiError(404, "Achievement ID is required");
   }
   const achievement = await Achievement.findById(achievementId);
   if (!achievement) {
-    throw new ApiError(404, "Achievement cannot be found");
+    throw new ApiError(404, "Achievement not found");
   }
+  return res.status(200).json(new ApiResponse(200, achievement, "Achievement found"));
+});
+
+const deleteAchievement = asyncHandler(async (req, res) => {
+  const { achievementId } = req.params;
+  if (!achievementId) {
+    throw new ApiError(400, "Achievement ID is required");
+  }
+
+  const achievement = await Achievement.findById(achievementId);
+  if (!achievement) {
+    throw new ApiError(404, "Achievement not found");
+  }
+
+  if (achievement.certificate) {
+    await deleteFromCloudinary(achievement.certificate);
+  }
+
+  await Achievement.findByIdAndDelete(achievementId);
+
   return res
     .status(200)
-    .json(new ApiResponse(200, achievement, "Achievement found"));
+    .json(new ApiResponse(200, {}, "Achievement deleted successfully"));
 });
 
 export {
   createAchievement,
-  deleteAchievement,
+  getPersonAchievements,
   updateAchievement,
-  getAchievement,
+  deleteAchievement,
+  getOneAchievement,
 };

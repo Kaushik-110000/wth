@@ -7,12 +7,19 @@ const collaborationSchema = new Schema(
     },
     description: {
       type: String,
+      required: true,
     },
     startDate: {
       type: Date,
+      required: true,
     },
     endDate: {
       type: Date,
+      required: true,
+    },
+    recepient: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     relatedProjects: [
       {
