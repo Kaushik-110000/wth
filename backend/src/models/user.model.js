@@ -36,6 +36,12 @@ const userSchema = new Schema(
     refreshToken: {
       type: String,
     },
+    linkedin: {
+      type: String,
+    },
+    googleScholar: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

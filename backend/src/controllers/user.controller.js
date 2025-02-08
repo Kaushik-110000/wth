@@ -30,11 +30,11 @@ const generateAccessandRefreshTokens = async (userId) => {
 const registerUser = asyncHandler(async (req, res) => {
   //user detail based n model -> validation on backend (not empty , format) -> check already exist (username,email) -> check images ->check avatar -> upload image to cloudinary and get returned url -> successfully uploaded or not -> create user object -> create entry on DB -> remove password and refresh token field in output  -> check user creation -> return response / error
 
-  const { userName, fullName, email, password } = req.body;
+  const { userName, fullName, email, password, linkedin, googleScholar } =
+    req.body;
   console.log(userName, email);
 
   console.log(req);
-
 
   if (
     [userName, fullName, email, password].some((field) => field?.trim() === "")
@@ -68,6 +68,8 @@ const registerUser = asyncHandler(async (req, res) => {
     avatar: avatar.url,
     email,
     password,
+    googleScholar: googleScholar || null,
+    linkedin: linkedin || null,
     userName: userName.toLowerCase(),
   });
 
@@ -85,7 +87,7 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const loginUser = asyncHandler(async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   const { email, password, userName } = req.body;
 
   if (!userName && !email) {
@@ -95,7 +97,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const theUser = await User.findOne({
     $or: [{ userName }, { email }],
   });
-console.log(theUser)
+  console.log(theUser);
 
   if (!theUser) {
     throw new ApiError(405, "User does not exists");
