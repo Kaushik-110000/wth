@@ -7,8 +7,8 @@ import {
 } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 import fs from "fs";
+import mongoose from "mongoose";
 
 const generateAccessandRefreshTokens = async (userId) => {
   console.log("hello");
@@ -30,8 +30,15 @@ const generateAccessandRefreshTokens = async (userId) => {
 const registerUser = asyncHandler(async (req, res) => {
   //user detail based n model -> validation on backend (not empty , format) -> check already exist (username,email) -> check images ->check avatar -> upload image to cloudinary and get returned url -> successfully uploaded or not -> create user object -> create entry on DB -> remove password and refresh token field in output  -> check user creation -> return response / error
 
-  const { userName, fullName, email, password, linkedin, googleScholar } =
-    req.body;
+  const {
+    userName,
+    fullName,
+    email,
+    password,
+    linkedin,
+    googleScholar,
+    designation,
+  } = req.body;
   console.log(userName, email);
 
   console.log(req);
@@ -67,6 +74,7 @@ const registerUser = asyncHandler(async (req, res) => {
     fullName,
     avatar: avatar.url,
     email,
+    designation: designation || "Respected",
     password,
     googleScholar: googleScholar || null,
     linkedin: linkedin || null,

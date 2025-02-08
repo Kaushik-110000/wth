@@ -8,12 +8,15 @@ const achievementSchema = new Schema(
     },
     description: {
       type: String,
+      required: true,
     },
     date: {
       type: Date,
+      required: true,
     },
     certificate: {
-      type: String, // Cloudinary URL
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }

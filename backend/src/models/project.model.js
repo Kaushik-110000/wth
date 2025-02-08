@@ -27,7 +27,7 @@ const projectSchema = new Schema(
     githubLink: {
       type: String,
     },
-    media: [String], // Array of image/video URLs
+    media: [String], 
   },
   { timestamps: true }
 );
