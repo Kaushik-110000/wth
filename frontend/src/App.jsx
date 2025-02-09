@@ -31,6 +31,7 @@ function App() {
                 .then((res) => {
                   if (res?._id) {
                     dispatch(storeLogin({ userData: res }));
+                    navigate(`/${res.userName}`);
                   } else {
                     dispatch(storeLogout());
                   }
