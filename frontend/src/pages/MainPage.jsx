@@ -42,7 +42,7 @@ function MainPage() {
           <div className="mt-3 space-x-4">
             <div className="flex">
               <a
-                href={`http://localhost:5173/${userName}`}
+                href={`https://recoz-kaushik-110000s-projects.vercel.app/${userName}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-300  text-xl hover:underline"
