@@ -37,13 +37,13 @@ function App() {
                 })
                 .catch(() => {
                   dispatch(storeLogout());
-                  navigate("/login");
+                  navigate("/");
                 })
                 .finally(() => setLoading(false));
             })
             .catch(() => {
               dispatch(storeLogout());
-              navigate("/login");
+              navigate("/");
             });
         } else {
           dispatch(storeLogout());
@@ -51,7 +51,7 @@ function App() {
       })
       .catch(() => {
         dispatch(storeLogout());
-        navigate("/login");
+        navigate("/");
       });
   }, []);
 
