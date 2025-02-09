@@ -26,7 +26,7 @@ function Conferences({ userName }) {
   }, [userName]);
 
   return (
-    <div className="flex flex-col items-center p-6 bg-gray-100 ">
+    <div className="flex flex-col items-center p-6 bg-gray-100 rounded-2xl my-1 ">
      <div className="flex flex-wrap items-center w-full max-w-6xl mb-6 
   justify-center md:justify-between">
 

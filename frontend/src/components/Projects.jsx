@@ -3,13 +3,16 @@ import projectService from "../backend/projects.config.js";
 import { useNavigate } from "react-router";
 
 function Projects({ userName }) {
+  const [loadProjects, setLoadProjects] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [query, setQuery] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
     const fetchProjects = async () => {
       try {
         const response = await projectService.getAll(userName); // Replace with actual username
         setProjects(response.data.data);
+        setLoadProjects(response.data.data);
       } catch (error) {
         console.error("Error fetching projects:", error);
       }
@@ -17,8 +20,25 @@ function Projects({ userName }) {
     fetchProjects();
   }, []);
 
+  const handleQueryChange = (e) => {
+    const searchText = e.target.value.toLowerCase();
+    setQuery(searchText);
+
+    if (searchText.trim() === "") {
+      setProjects(loadProjects);
+    } else {
+      setProjects(
+        loadProjects.filter(
+          (project) =>
+            project.title.toLowerCase().includes(searchText) ||
+            project.description.toLowerCase().includes(searchText)
+        )
+      );
+    }
+  };
+  
   return (
-    <div className="flex flex-col items-center p-6 bg-gray-100 ">
+    <div className="flex flex-col items-center p-6 bg-gray-100 rounded-2xl my-1">
       <div
         className="flex flex-wrap items-center w-full max-w-6xl mb-6 
   justify-center md:justify-between"
@@ -35,12 +55,19 @@ function Projects({ userName }) {
           Add Project
         </button>
       </div>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <input
+        type="text"
+        value={query}
+        placeholder="Search Something"
+        onChange={handleQueryChange}
+        className="mb-6 p-2 w-full max-w-md border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full max-w-6xl">
         {projects.length > 0 ? (
           projects.map((project) => (
             <div
               key={project._id}
-              className="bg-white p-6 rounded-xl shadow-md relative"
+              className="bg-white p-6 rounded-xl shadow-md relative hover:scale-105"
             >
               <h3
                 className="text-xl font-semibold text-gray-800"

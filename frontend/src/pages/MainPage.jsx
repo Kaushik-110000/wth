@@ -3,6 +3,7 @@ import authservice from "../backend/auth.config";
 import { useParams } from "react-router";
 import Linkedin from "../files/linkedIn.svg";
 import Scholar from "../files/Scholar.svg";
+import email from "../files/mail.svg";
 import {
   Achievements,
   Awards,
@@ -39,6 +40,27 @@ function MainPage() {
           <p className="text-lg font-medium opacity-80">{user.designation},</p>
           <h1 className="text-4xl font-bold">{user.fullName}</h1>
           <div className="mt-3 space-x-4">
+            <div className="flex">
+              <a
+                href={`http://localhost:5173/${userName}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-300  text-xl hover:underline"
+              >
+                Your, Recoz here!
+              </a>
+            </div>
+            <div className="flex">
+              <a
+                href={`mailto: ${user.email}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-300 hover:underline"
+              >
+                Mail
+              </a>
+              <img src={email} alt="linkedin logo" className="ml-2 h-6 w-6" />
+            </div>
             {user.linkedin && (
               <div className="flex">
                 <a
@@ -49,7 +71,11 @@ function MainPage() {
                 >
                   LinkedIn
                 </a>
-                <img src={Linkedin} alt="linkedin logo" className="h-6 w-6" />
+                <img
+                  src={Linkedin}
+                  alt="linkedin logo"
+                  className="ml-2 h-6 w-6"
+                />
               </div>
             )}
             {user.googleScholar && (
@@ -62,19 +88,13 @@ function MainPage() {
                 >
                   Google Scholar
                 </a>
-                <img src={Scholar} alt="linkedin logo" className="h-6 w-6" />
+                <img
+                  src={Scholar}
+                  alt="linkedin logo"
+                  className="ml-2 h-6 w-6"
+                />
               </div>
             )}
-            <div className="flex">
-              <a
-                href={`http://localhost:5173/${userName}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-300 hover:underline"
-              >
-                Recoz
-              </a>
-            </div>
           </div>
         </div>
 
@@ -93,10 +113,10 @@ function MainPage() {
         <TeachingExperiences userName={userName} />
         <Posts userName={userName} />
         <Achievements userName={userName} />
+        <Projects userName={userName} />
         <Awards userName={userName} />
         <Collaborations userName={userName} />
         <Conferences userName={userName} />
-        <Projects userName={userName} />
       </div>
     </div>
   );

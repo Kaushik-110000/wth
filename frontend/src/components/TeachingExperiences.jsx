@@ -43,13 +43,13 @@ function TeachingExperiences({ userName }) {
   };
 
   return (
-    <div className="flex flex-col items-center p-6 bg-gray-100 rounded-lg shadow-md">
+    <div className="flex flex-col items-center p-6 bg-gray-100 rounded-2xl my-1 shadow-md">
       <div
         className="flex flex-wrap items-center w-full max-w-6xl mb-6 
   justify-center md:justify-between"
       >
         <h2 className="text-3xl m-1  mx-3 font-semibold text-gray-800">
-          Teaching Experiences
+          My, Teaching Experiences !
         </h2>
 
         {/* Show Add button only if the logged-in user is the recipient */}

@@ -31,7 +31,7 @@ function Achievements({ userName }) {
   const loadLess = () => setVisibleCount((prev) => Math.max(4, prev - 4));
 
   return (
-    <div className="flex flex-col items-center p-4 bg-gray-100 rounded-sm">
+    <div className="flex flex-col items-center p-4 bg-gray-100 rounded-2xl my-1">
       <div
         className="flex flex-wrap items-center w-full max-w-6xl mb-6 
   justify-center md:justify-between"
