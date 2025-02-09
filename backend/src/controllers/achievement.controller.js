@@ -1,7 +1,10 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { Achievement } from "../models/achievement.model.js";
-import { uploadOnCloudinary, deleteFromCloudinary } from "../utils/cloudinary.js";
+import {
+  uploadOnCloudinary,
+  deleteFromCloudinary,
+} from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import mongoose from "mongoose";
@@ -34,7 +37,9 @@ const createAchievement = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, achievement, "Achievement created successfully"));
+    .json(
+      new ApiResponse(200, achievement, "Achievement created successfully")
+    );
 });
 
 const getPersonAchievements = asyncHandler(async (req, res) => {
@@ -63,7 +68,9 @@ const getPersonAchievements = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, achievements, "Achievements retrieved successfully"));
+    .json(
+      new ApiResponse(200, achievements, "Achievements retrieved successfully")
+    );
 });
 
 const updateAchievement = asyncHandler(async (req, res) => {
@@ -75,6 +82,10 @@ const updateAchievement = asyncHandler(async (req, res) => {
   const achievement = await Achievement.findById(achievementId);
   if (!achievement) {
     throw new ApiError(404, "Achievement not found");
+  }
+
+  if (achievement.recepient.toString() != req.user._id.toString() ) {
+    throw new ApiError(400, "No you cannot");
   }
 
   const { title, description, date } = req.body;
@@ -96,7 +107,13 @@ const updateAchievement = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, updatedAchievement, "Achievement updated successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        updatedAchievement,
+        "Achievement updated successfully"
+      )
+    );
 });
 
 const getOneAchievement = asyncHandler(async (req, res) => {
@@ -108,7 +125,9 @@ const getOneAchievement = asyncHandler(async (req, res) => {
   if (!achievement) {
     throw new ApiError(404, "Achievement not found");
   }
-  return res.status(200).json(new ApiResponse(200, achievement, "Achievement found"));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, achievement, "Achievement found"));
 });
 
 const deleteAchievement = asyncHandler(async (req, res) => {
@@ -120,6 +139,9 @@ const deleteAchievement = asyncHandler(async (req, res) => {
   const achievement = await Achievement.findById(achievementId);
   if (!achievement) {
     throw new ApiError(404, "Achievement not found");
+  }
+  if (achievement.recepient.toString()  != req.user._id.toString() ) {
+    throw new ApiError(400, "No you cannot");
   }
 
   if (achievement.certificate) {

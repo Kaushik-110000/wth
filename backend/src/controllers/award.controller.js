@@ -78,6 +78,10 @@ const updateAward = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Award not found");
   }
 
+  if (award.recepient.toString()  != req.user._id.toString() ) {
+    throw new ApiError(400, "No you cannot");
+  }
+
   const { title, organization, year } = req.body;
   let certificateUrl = award.certificate;
 
@@ -121,6 +125,9 @@ const deleteAward = asyncHandler(async (req, res) => {
   const award = await Award.findById(awardId);
   if (!award) {
     throw new ApiError(404, "Award not found");
+  }
+  if (award.recepient.toString()  != req.user._id.toString() ) {
+    throw new ApiError(400, "No you cannot");
   }
 
   // Delete certificate from Cloudinary if exists

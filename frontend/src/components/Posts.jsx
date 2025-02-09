@@ -39,15 +39,19 @@ function Posts(userName) {
   return (
     <div className="flex flex-col items-center p-4 bg-gray-100 rounded-sm">
       {/* Header */}
-      <div className="flex justify-between items-center w-full max-w-6xl mb-6">
-        <h2 className="text-3xl font-semibold text-gray-800">All Posts</h2>
-        {/* Show Add Post button if logged-in user matches userName */}
+      <div
+        className="flex flex-wrap items-center w-full max-w-6xl mb-6 
+  justify-center md:justify-between"
+      >
+        <h2 className="text-3xl m-1 mx-3 font-semibold text-gray-800">
+          All Posts
+        </h2>
         {currentUser?.userName === userName.userName && (
           <button
             onClick={() => {
               navigate(`/addPost/${userName.userName}`);
             }} // Empty function
-            className="bg-blue-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition duration-200"
+            className="bg-blue-600 m-1 mx-3 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition duration-200"
           >
             Add Post
           </button>
@@ -61,8 +65,20 @@ function Posts(userName) {
             key={post._id}
             className="bg-white shadow-lg rounded-lg p-4 transition-transform hover:scale-105 relative"
           >
-            <h3 className="text-lg font-bold text-gray-900">{post.title}</h3>
-            <p className="text-gray-600 text-sm mt-1">
+            <h3
+              className="text-lg font-bold text-gray-900"
+              onClick={() => {
+                navigate(`/post/${post._id}`);
+              }}
+            >
+              {post.title}
+            </h3>
+            <p
+              className="text-gray-600 text-sm mt-1"
+              onClick={() => {
+                navigate(`/post/${post._id}`);
+              }}
+            >
               {post.content.length > 100
                 ? post.content.substring(0, 100) + "..."
                 : post.content}

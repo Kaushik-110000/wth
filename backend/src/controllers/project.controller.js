@@ -7,7 +7,8 @@ import {
   deleteFromCloudinary,
 } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import mongoose  from "mongoose";
+import mongoose from "mongoose";
+import fs from "fs";
 const uploadProject = asyncHandler(async (req, res) => {
   const {
     title,
@@ -18,7 +19,7 @@ const uploadProject = asyncHandler(async (req, res) => {
     teamMembers,
     githubLink,
   } = req.body;
-
+  const userId = req.user?._id.toString();
   if (!title || !description) {
     throw new ApiError(400, "Title and description are necessary");
   }
@@ -40,7 +41,7 @@ const uploadProject = asyncHandler(async (req, res) => {
     startDate: startDate || null,
     endDate: endDate || null,
     technologiesUsed: technologiesUsed || null,
-    teamMembers: teamMembers || null,
+    teamMembers: [teamMembers, userId],
     githubLink: githubLink || null,
     media: mediaUrls || null,
   });
@@ -129,7 +130,7 @@ const getProject = asyncHandler(async (req, res) => {
   if (!project) {
     throw new ApiError(404, "Project cannot be found");
   }
-  return res.status(200).json(new ApiResponse(200, project , "Project found"));
+  return res.status(200).json(new ApiResponse(200, project, "Project found"));
 });
 
 const getAll = asyncHandler(async (req, res) => {
@@ -147,7 +148,7 @@ const getAll = asyncHandler(async (req, res) => {
   }
 
   const userId = user._id;
-
+  console.log(userId, user._id);
   // Corrected aggregate pipeline
   const projects = await Project.aggregate([
     {
@@ -173,7 +174,7 @@ const getAll = asyncHandler(async (req, res) => {
       },
     },
   ]);
-
+  console.log(projects);
   return res
     .status(200)
     .json(new ApiResponse(200, projects, "Found all projects"));

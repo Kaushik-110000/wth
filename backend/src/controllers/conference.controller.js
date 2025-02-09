@@ -86,6 +86,9 @@ const updateConference = asyncHandler(async (req, res) => {
   if (!conference) {
     throw new ApiError(404, "Conference not found");
   }
+  if (conference.recepient.toString()  != req.user._id.toString() ) {
+    throw new ApiError(400, "No you cannot");
+  }
 
   const { name, location, date, description, presentationLink } = req.body;
 
@@ -109,6 +112,9 @@ const deleteConference = asyncHandler(async (req, res) => {
   const conference = await Conference.findById(conferenceId);
   if (!conference) {
     throw new ApiError(404, "Conference not found");
+  }
+  if (conference.recepient.toString()  != req.user._id.toString() ) {
+    throw new ApiError(400, "No you cannot");
   }
 
   await Conference.findByIdAndDelete(conferenceId);

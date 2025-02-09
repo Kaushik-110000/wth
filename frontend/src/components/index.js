@@ -10,21 +10,17 @@ import Collaborations from "./Collaborations.jsx";
 import CollaborationAdd from "./CollaborationAdd.jsx";
 import CollaborationEdit from "./CollaborationEdit.jsx";
 import Conferences from "./Conferences.jsx";
-import ConferenceEdit from "./ConferenceEdit.jsx";
 import ConferenceAdd from "./ConferenceAdd.jsx";
 import Posts from "./Posts.jsx";
 import PostAdd from "./PostAdd.jsx";
 import PostEdit from "./PostEdit.jsx";
 import Projects from "./Projects.jsx";
 import ProjectAdd from "./ProjectAdd.jsx";
-import ProjectEdit from "./ProjectEdit.jsx";
-import ResearchPapers from "./ResearchPapers.jsx";
-import ResearchPaperAdd from "./ResearchPaperAdd.jsx";
-import ResearchPaperEdit from "./ResearchPaperEdit.jsx";
 import TeachingExperiences from "./TeachingExperiences.jsx";
-import TeachingExperienceEdit from "./TeachingExperienceEdit.jsx";
 import TeachingExperienceAdd from "./TeachingExperienceAdd.jsx";
-
+import SinglePost from "./SinglePost.jsx";
+import SingleAchievement from "./SingleAchievement.jsx";
+import SingleProject from "./SingleProject.jsx";
 export {
   Register,
   Login,
@@ -38,18 +34,15 @@ export {
   CollaborationAdd,
   CollaborationEdit,
   Conferences,
-  ConferenceEdit,
   ConferenceAdd,
   Posts,
   PostAdd,
   PostEdit,
   Projects,
   ProjectAdd,
-  ProjectEdit,
-  ResearchPapers,
-  ResearchPaperAdd,
-  ResearchPaperEdit,
   TeachingExperiences,
-  TeachingExperienceEdit,
   TeachingExperienceAdd,
+  SinglePost,
+  SingleAchievement,
+  SingleProject,
 };

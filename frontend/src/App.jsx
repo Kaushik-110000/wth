@@ -9,9 +9,11 @@ import {
   logOut as storeLogout,
 } from "./store/authSlice.js";
 import Header from "./components/header/Header.jsx";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import authservice from "./backend/auth.config.js";
+import Homedesign from "./components/Homedesign.jsx";
 function App() {
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -56,6 +58,7 @@ function App() {
   return !loading ? (
     <Container>
       <Header />
+      {location.pathname === "/" && <Homedesign />}
       <Outlet />
     </Container>
   ) : null;
