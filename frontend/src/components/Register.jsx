@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { login as storeLogin } from "../store/authSlice.js";
 import authService from "../backend/auth.config.js";
-import errorTeller from "../Backend/errorTeller.js";
+import errorTeller from "../backend/errorTeller.js";
 
 function Register() {
   const [formData, setFormData] = useState({
