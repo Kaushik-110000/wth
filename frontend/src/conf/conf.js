@@ -1,4 +1,4 @@
 const conf={
-    serverUrl : "http://localhost:8011/api/v1"
+    serverUrl : "https://wth-k7cj.onrender.com/api/v1"
 }
 export default conf
