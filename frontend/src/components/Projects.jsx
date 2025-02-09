@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import projectService from "../backend/projects.config.js";
 import { useNavigate } from "react-router";
-
+import { useSelector } from "react-redux";
 function Projects({ userName }) {
   const [loadProjects, setLoadProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.auth.userData);
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -46,14 +47,14 @@ function Projects({ userName }) {
         <h2 className="text-3xl m-1 mx-3 font-semibold text-gray-800 mb-6 text-center">
           Projects / Papers
         </h2>
-        <button
+        {currentUser?.userName === userName && (<button
           onClick={() => {
             navigate(`/addProjects/${userName}`);
           }}
           className=" bg-blue-600 m-1 mx-3 mb-2 text-white px-3 py-2  w-30 rounded"
         >
           Add Project
-        </button>
+        </button>)}
       </div>
       <input
         type="text"
