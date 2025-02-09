@@ -243,6 +243,17 @@ const checkRefreshToken = asyncHandler(async (req, res) => {
   else return res.status(201).json(201);
 });
 
+const getUser = asyncHandler(async (req, res) => {
+  const { userName } = req.params;
+  if (!userName) {
+    throw new ApiError(404, "Username not present");
+  }
+  const user = await User.findOne({ userName: userName.trim() });
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+  return res.status(200).json(new ApiResponse(200, user, "Found user"));
+});
 export {
   registerUser,
   loginUser,
@@ -250,4 +261,5 @@ export {
   getAccessToken,
   getCurrentUser,
   checkRefreshToken,
+  getUser
 };

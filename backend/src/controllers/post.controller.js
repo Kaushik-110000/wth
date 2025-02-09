@@ -5,6 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 
 const createPost = asyncHandler(async (req, res) => {
+  console.log(req.body);
   const { title, content, tags } = req.body;
   const userId = req.user?._id; // Extract user ID from JWT token
 
@@ -35,7 +36,7 @@ const getPost = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Post ID is required");
   }
 
-  const post = await Post.findById(postId).populate("author", "username email");
+  const post = await Post.findById(postId).populate("author", "userName email");
 
   if (!post) {
     throw new ApiError(404, "Post not found");

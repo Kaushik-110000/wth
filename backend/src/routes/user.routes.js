@@ -7,6 +7,7 @@ import {
   getAccessToken,
   getCurrentUser,
   checkRefreshToken,
+  getUser,
 } from "../controllers/user.controller.js";
 
 import { upload } from "../middleware/multer.middleware.js";
@@ -25,7 +26,7 @@ router.route("/register").post(
 router.route("/login").post(loginUser);
 router.route("/logout").post(verifyJWT, logOutUser);
 router.route("/refresh-tokens").post(getAccessToken);
-router.route("/current-user").get(verifyJWT, getCurrentUser);
+router.route("/current/current-user").get(verifyJWT, getCurrentUser);
 router.route("/check-refresh").get(checkRefreshToken);
-
+router.route("/:userName").get(getUser);
 export default router;
