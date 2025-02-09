@@ -130,7 +130,7 @@ function ProjectAdd() {
           <p className="text-red-500 text-sm">{errors.githubLink}</p>
         )}
 
-        <label className="block mt-4 mb-2 font-semibold">Upload images (At least 2)</label>
+        <label className="block mt-4 mb-2 font-semibold">Upload images (Max : 10)</label>
         <input
           type="file"
           name="images"
